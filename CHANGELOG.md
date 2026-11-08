@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   embedded in the binary and shown in the title bar and taskbar, not only in
   the app-menu launcher.
 - 📦 **Ready-made releases** — download `mono_stereo_gui-linux-x86_64.tar.gz`
-  from the [Releases page](https://github.com/NurMohammadDuari/mono-stereo-gui/releases)
+  or the **`mono-stereo-gui_0.2.0_amd64.deb`** package (double-click install on
+  Ubuntu / Mint / Debian) from the
+  [Releases page](https://github.com/NurMohammadDuari/mono-stereo-gui/releases)
   and install with the bundled `install.sh` (no compiler needed).
 - 🧑‍💻 **`install.sh`** — one-shot installer with both user-only
   (`./install.sh`) and system-wide (`sudo ./install.sh`) modes, including

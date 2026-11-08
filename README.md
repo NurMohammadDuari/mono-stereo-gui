@@ -1,23 +1,40 @@
 # Mono / Stereo Audio Switcher
 
+[![Download](https://img.shields.io/badge/%E2%AC%87%EF%B8%8F%20Download%20.deb%20(Ubuntu%2FMint%2FDebian)-v0.2.0-blue?style=flat)](https://github.com/NurMohammadDuari/mono-stereo-gui/releases/download/v0.2.0/mono-stereo-gui_0.2.0_amd64.deb)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux-orange)](#-quick-start-for-noobs--no-coding-needed)
+
 A lightweight desktop app to easily switch between **Mono** and **Stereo** audio output on Linux (PipeWire / PulseAudio). Built with **Rust** + **egui** for a clean, Apple-style interface.
+
+> **⬇️ One-click downloads** → [Ubuntu/Mint/Debian `​.deb`](https://github.com/NurMohammadDuari/mono-stereo-gui/releases/download/v0.2.0/mono-stereo-gui_0.2.0_amd64.deb) | [Other Linux `​.tar.gz`](https://github.com/NurMohammadDuari/mono-stereo-gui/releases/download/v0.2.0/mono_stereo_gui-linux-x86_64.tar.gz) | [All releases](https://github.com/NurMohammadDuari/mono-stereo-gui/releases)
 
 ## 🚀 Quick Start (for noobs — no coding needed!)
 
-**1. Download the app** — go to the
-[**Releases page**](https://github.com/NurMohammadDuari/mono-stereo-gui/releases) and
-download the newest file ending in `.tar.gz`
-(for example `mono_stereo_gui-linux-x86_64.tar.gz`).
+### 🐧 Ubuntu / Mint / Debian users — **ONE-CLICK install**
 
-**2. Extract it** — either right-click the file → *Extract here*, or run:
+[**⬇️ CLICK HERE to download `mono-stereo-gui_0.2.0_amd64.deb`**](https://github.com/NurMohammadDuari/mono-stereo-gui/releases/download/v0.2.0/mono-stereo-gui_0.2.0_amd64.deb)
+
+…then either:
+
+1. **Double-click the `.deb` file** → click *Install* in the package manager, **or**
+2. Run in a terminal:
+
+   ```bash
+   sudo apt install ./mono-stereo-gui_0.2.0_amd64.deb
+   ```
+
+Done ✅ — search **"Mono / Stereo"** in your app menu and click it.
+
+### 🌍 Any other Linux — download the tarball
+
+Go to the [**Releases page**](https://github.com/NurMohammadDuari/mono-stereo-gui/releases)
+and download the newest file ending in `.tar.gz`
+(for example `mono_stereo_gui-linux-x86_64.tar.gz`), then:
 
 ```bash
 tar -xzf ~/Downloads/mono_stereo_gui-linux-x86_64.tar.gz
-```
+cd mono_stereo_gui-linux-x86_64
 
-**3. Install it** — you have two very easy options:
-
-```bash
 # EASIEST: user install (no password asked)
 ./install.sh
 
@@ -25,7 +42,7 @@ tar -xzf ~/Downloads/mono_stereo_gui-linux-x86_64.tar.gz
 sudo ./install.sh
 ```
 
-Done ✅ — search **"Mono / Stereo"** in your app menu, or just double-click the
+Then search **"Mono / Stereo"** in your app menu, or just double-click the
 extracted `mono_stereo_gui` file.
 
 > 🐧 Requirements: any modern Linux with PipeWire or PulseAudio and `pactl`
