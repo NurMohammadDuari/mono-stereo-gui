@@ -1,0 +1,13 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+
+# Editor / OS cruft
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Local ~/.env-style files
+.env

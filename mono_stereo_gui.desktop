@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Mono / Stereo
+GenericName=Audio Switcher
+Comment=Easily switch between Mono and Stereo audio output
+Exec=mono_stereo_gui
+Icon=mono_stereo_gui
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Settings;
+StartupNotify=true
+Keywords=mono;stereo;audio;sound;pipewire;pulse;

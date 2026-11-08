@@ -1,0 +1,10 @@
+[package]
+name = "mono_stereo_gui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.29"
+
+[profile.release]
+opt-level = 3
