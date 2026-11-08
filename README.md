@@ -2,6 +2,35 @@
 
 A lightweight desktop app to easily switch between **Mono** and **Stereo** audio output on Linux (PipeWire / PulseAudio). Built with **Rust** + **egui** for a clean, Apple-style interface.
 
+## 🚀 Quick Start (for noobs — no coding needed!)
+
+**1. Download the app** — go to the
+[**Releases page**](https://github.com/NurMohammadDuari/mono-stereo-gui/releases) and
+download the newest file ending in `.tar.gz`
+(for example `mono_stereo_gui-linux-x86_64.tar.gz`).
+
+**2. Extract it** — either right-click the file → *Extract here*, or run:
+
+```bash
+tar -xzf ~/Downloads/mono_stereo_gui-linux-x86_64.tar.gz
+```
+
+**3. Install it** — you have two very easy options:
+
+```bash
+# EASIEST: user install (no password asked)
+./install.sh
+
+# OR system-wide install with a menu entry for all users
+sudo ./install.sh
+```
+
+Done ✅ — search **"Mono / Stereo"** in your app menu, or just double-click the
+extracted `mono_stereo_gui` file.
+
+> 🐧 Requirements: any modern Linux with PipeWire or PulseAudio and `pactl`
+> (Ubuntu, Mint, Fedora, Pop!_OS, Arch etc. already have it).
+
 ## Features
 
 - 🎚️ One-click toggle between Mono and Stereo audio output
@@ -17,7 +46,13 @@ A lightweight desktop app to easily switch between **Mono** and **Stereo** audio
 
 ## Installation
 
-### From source
+### Option 1 — Download ready-made binary (no compiler needed)
+
+See **[Quick Start](#-quick-start-for-noobs--no-coding-needed)** above — grab the
+latest binary from the
+[Releases page](https://github.com/NurMohammadDuari/mono-stereo-gui/releases).
+
+### Option 2 — Build from source
 
 ```bash
 # Clone the repository
@@ -66,6 +101,7 @@ mono-stereo-gui/
 │   └── main.rs         # Application source code
 ├── assets/             # App icons (16px – 1024px)
 │   └── icon-*.png
+├── install.sh          # One-shot installer used by the releases
 ├── mono_stereo_gui.desktop   # Linux desktop launcher
 ├── LICENSE             # MIT License
 └── README.md           # This file
@@ -79,14 +115,20 @@ cargo build --release
 
 The optimized binary will be at `target/release/mono_stereo_gui`.
 
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
 ## Author
 
-**NurMohammadDuari** — https://github.com/NurMohammadDuari
+**Nur Mohammad Duari** — https://github.com/NurMohammadDuari
+
+## 📚 More documentation
+
+| Document | What's inside |
+| --- | --- |
+| [User Guide](docs/user-guide.md) | When to use mono, how switching works exactly |
+| [Troubleshooting](docs/troubleshooting.md) | "`pactl` missing", no sound after swap, icon problems, immutable distros… |
+| [Contributing](CONTRIBUTING.md) | How to build, test and submit pull requests |
+| [Changelog](CHANGELOG.md) | Every release and its changes |
+| [Security Policy](SECURITY.md) | How to report vulnerabilities privately |
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.

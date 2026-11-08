@@ -85,14 +85,14 @@ impl eframe::App for AudioSwitcher {
                         unload_remaps();
                         let ok = pactl_ok(&[
                             "load-module", "module-remap-sink",
-                            "sink_name=mono_output",
+                            &format!("sink_name={MONO_NAME}"),
                             &format!("master={}", master),
                             "channels=1", "channel_map=mono"
                         ]);
                         eprintln!("Load module result: {}", ok);
                         if ok {
-                            pactl_ok(&["set-default-sink", "mono_output"]);
-                            move_streams("mono_output");
+                            pactl_ok(&["set-default-sink", MONO_NAME]);
+                            move_streams(MONO_NAME);
                             self.status = "Switched to Mono".into();
                             eprintln!("Switched to Mono");
                         } else {
@@ -110,12 +110,24 @@ impl eframe::App for AudioSwitcher {
     }
 }
 
+/// Decode the embedded icon once and hand it to the window manager,
+/// so the app shows its icon in the window title bar and taskbar.
+fn load_icon() -> Option<egui::IconData> {
+    let png = include_bytes!("../assets/icon-256.png");
+    let img = image::load_from_memory(png)
+        .ok()?
+        .into_rgba8();
+    let (width, height) = img.dimensions();
+    Some(egui::IconData { width, height, rgba: img.into_raw() })
+}
+
 fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([400.0, 300.0])
             .with_resizable(false)
-            .with_title("Audio Mode"),
+            .with_title("Audio Mode")
+            .with_icon(load_icon().unwrap_or(egui::IconData::default())),
         ..Default::default()
     };
     eframe::run_native("Audio Mode", options, Box::new(|_cc| Ok(Box::new(AudioSwitcher::default()))))
