@@ -4,7 +4,7 @@ version = "0.2.0"
 edition = "2021"
 
 [dependencies]
-eframe = "0.29"
+eframe = "0.37"
 # Only PNG decoding, to embed/set the app icon (keeps build small)
 image = { version = "0.25", default-features = false, features = ["png"] }
 
