@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checks:
+    name: Format + Clippy + Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Let cargo cache all deps between runs (~huge time saver)
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install runtime libraries required by the GUI
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev \
+            libx11-dev libxi-dev libgl1-mesa-dev
+
+      - name: Format check
+        run: cargo fmt -- --check
+
+      - name: Clippy (deny warnings)
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Build (release profile to validate icon embedding)
+        run: cargo build --release
+
+      - name: Upload untested binary artifact (for quick local test)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mono_stereo_gui-${{ runner.os }}-${{ github.sha }}
+          path: target/release/mono_stereo_gui
+          if-no-files-found: error
+
+  deb:
+    name: Debian package smoke-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain + runtime libs
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            rustc cargo libxkbcommon-dev libxkbcommon-x11-dev \
+            libwayland-dev libx11-dev libxi-dev libgl1-mesa-dev
+
+      - name: Build binary
+        run: cargo build --release
+
+      - name: Build .deb (same recipe as docs/building.md)
+        run: |
+          P=/tmp/pkg/mono-stereo-gui
+          mkdir -p $P/DEBIAN $P/usr/bin $P/usr/share/applications \
+            $P/usr/share/doc/mono-stereo-gui
+          install -m755 target/release/mono_stereo_gui $P/usr/bin/
+          install -m644 mono_stereo_gui.desktop $P/usr/share/applications/
+          for s in 16 32 48 64 128 256 512 1024; do
+            d=$P/usr/share/icons/hicolor/${s}x${s}/apps
+            install -Dm644 assets/icon-$s.png $d/mono_stereo_gui.png
+          done
+          cp docs/*.md README.md $P/usr/share/doc/mono-stereo-gui/
+          V=$(sed -n 's/^version *= *"\(.*\)"/\1/p' Cargo.toml | head -1)
+          dpkg-deb --root-owner-group --build $P mono-stereo-gui_${V}_amd64.deb
+
+      - name: Lint package control dependencies
+        run: dpkg-deb -I mono-stereo-gui_*_amd64.deb | head -15
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mono-stereo-gui-deb-${{ github.sha }}
+          path: mono-stereo-gui_*_amd64.deb
+          if-no-files-found: error

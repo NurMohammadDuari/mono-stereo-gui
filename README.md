@@ -112,16 +112,34 @@ The app uses PipeWire/PulseAudio's `module-remap-sink` to create a dedicated mon
 
 ```
 mono-stereo-gui/
-├── Cargo.toml          # Rust package manifest
-├── Cargo.lock          # Locked dependencies
+├── Cargo.toml                # Rust package manifest
+├── Cargo.lock                # Locked dependencies
 ├── src/
-│   └── main.rs         # Application source code
-├── assets/             # App icons (16px – 1024px)
+│   └── main.rs               # Application source code
+├── assets/                   # App icons (16px – 1024px)
 │   └── icon-*.png
-├── install.sh          # One-shot installer used by the releases
+├── install.sh                # One-shot installer used by the releases
 ├── mono_stereo_gui.desktop   # Linux desktop launcher
-├── LICENSE             # MIT License
-└── README.md           # This file
+├── docs/
+│   ├── user-guide.md         # Daily usage
+│   ├── troubleshooting.md    # Common problems & fixes
+│   ├── how-it-works.md       # Technical deep dive (pactl internals)
+│   ├── building.md           # Full build & packaging guide
+│   ├── faq.md                # Frequently asked questions
+│   └── roadmap.md            # Planned features
+├── .github/
+│   ├── workflows/            # CI (test & build) + Release (package & publish)
+│   ├── ISSUE_TEMPLATE/       # Bug & feature templates, links for non-bugs
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── CODEOWNERS
+│   ├── FUNDING.yml           # GitHub Sponsors link
+│   └── dependabot.yml        # Auto-update Rust + Actions deps
+├── CODE_OF_CONDUCT.md        # Be nice rules
+├── CONTRIBUTING.md           # How to contribute
+├── SECURITY.md               # Private vulnerability reporting
+├── CHANGELOG.md              # Every release documented
+├── LICENSE                   # MIT License
+└── README.md                 # This file
 ```
 
 ## Building
@@ -142,7 +160,12 @@ The optimized binary will be at `target/release/mono_stereo_gui`.
 | --- | --- |
 | [User Guide](docs/user-guide.md) | When to use mono, how switching works exactly |
 | [Troubleshooting](docs/troubleshooting.md) | "`pactl` missing", no sound after swap, icon problems, immutable distros… |
+| [FAQ](docs/faq.md) | Quick answers: safety, which download to pick, uninstalling |
+| [How it works](docs/how-it-works.md) | The `pactl` commands behind the button, design decisions |
+| [Building](docs/building.md) | Compile from source, build the `.deb`/`.tar.gz` yourself |
+| [Roadmap](docs/roadmap.md) | What's planned for future versions |
 | [Contributing](CONTRIBUTING.md) | How to build, test and submit pull requests |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards |
 | [Changelog](CHANGELOG.md) | Every release and its changes |
 | [Security Policy](SECURITY.md) | How to report vulnerabilities privately |
 

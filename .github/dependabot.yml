@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Rust dependencies (eframe, image, …)
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # GitHub Actions used in CI/CD
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

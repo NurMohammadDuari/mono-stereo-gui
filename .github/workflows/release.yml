@@ -1,0 +1,122 @@
+name: Release
+
+# Building a tag like v0.3.0 automatically:
+#   1. builds the release binary,
+#   2. packages the portable .tar.gz + the Ubuntu/Debian .deb,
+#   3. creates/publishes the GitHub Release and uploads both assets.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish release assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install runtime libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev \
+            libx11-dev libxi-dev libgl1-mesa-dev
+
+      - name: Build (release)
+        run: cargo build --release
+
+      # ---------- Portable tarball ----------
+      - name: Package tarball
+        env:
+          PKG: /tmp/pkg-release/mono_stereo_gui-linux-x86_64
+        run: |
+          set -euo pipefail
+          rm -rf "$PKG" && mkdir -p "$PKG/assets"
+          V=$(sed -n 's/^version *= *"\(.*\)"/\1/p' Cargo.toml | head -1)
+          echo "version=$V" >> "$GITHUB_ENV"
+          cp target/release/mono_stereo_gui install.sh mono_stereo_gui.desktop \
+             LICENSE README.md "$PKG/"
+          chmod 755 "$PKG/mono_stereo_gui" "$PKG/install.sh"
+          for s in 16 32 48 64 128 256 512 1024; do
+            cp assets/icon-$s.png "$PKG/assets/"
+          done
+          tar -czf mono_stereo_gui-linux-x86_64.tar.gz -C /tmp/pkg-release \
+              mono_stereo_gui-linux-x86_64
+          shasum -a 256 mono_stereo_gui-linux-x86_64.tar.gz \
+                    > mono_stereo_gui-linux-x86_64.tar.gz.sha256
+
+      # ---------- Debian package ----------
+      - name: Package .deb
+        run: |
+          set -euo pipefail
+          P=/tmp/pkg-deb/mono-stereo-gui
+          mkdir -p $P/DEBIAN $P/usr/bin $P/usr/share/applications \
+            $P/usr/share/doc/mono-stereo-gui
+          install -m755 target/release/mono_stereo_gui $P/usr/bin/
+          install -m644 mono_stereo_gui.desktop $P/usr/share/applications/
+          for s in 16 32 48 64 128 256 512 1024; do
+            install -Dm644 assets/icon-$s.png \
+              $P/usr/share/icons/hicolor/${s}x${s}/apps/mono_stereo_gui.png
+          done
+          cp docs/*.md README.md $P/usr/share/doc/mono-stereo-gui/
+          cat > $P/DEBIAN/control <<EOF
+          Package: mono-stereo-gui
+          Source: mono-stereo-gui
+          Version: ${{ env.version }}
+          Section: sound
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Nur Mohammad Duari <NurMohammadDuari@users.noreply.github.com>
+          Depends: libc6 (>= 2.31), libx11-6, libx11-xcb1, libxcursor1, libxrandr2, libxi6, libxkbcommon0, libxkbcommon-x11-0, libwayland-client0, libegl1, libgbm1, libgl1, pulseaudio-utils
+          Description: One-click Mono <-> Stereo audio output switcher for Linux
+           A tiny Apple-style desktop app that switches your audio output between
+           mono and stereo on Linux (PipeWire / PulseAudio) and automatically moves
+           every running audio stream (browser, player, video) to the new sink.
+          Homepage: https://github.com/NurMohammadDuari/mono-stereo-gui
+          EOF
+          cat > $P/DEBIAN/postinst <<'EOT'
+          #!/bin/sh
+          command -v gtk-update-icon-cache >/dev/null 2>&1 && \
+            gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
+          command -v update-desktop-database >/dev/null 2>&1 && \
+            update-desktop-database /usr/share/applications 2>/dev/null || true
+          exit 0
+          EOT
+          cat > $P/DEBIAN/prerm <<'EOT'
+          #!/bin/sh
+          if command -v pactl >/dev/null 2>&1; then
+            pactl list short modules 2>/dev/null | grep remap-sink | \
+              while read -r id rest; do pactl unload-module "$id" 2>/dev/null || true; done
+          fi
+          exit 0
+          EOT
+          chmod 755 $P/DEBIAN/postinst $P/DEBIAN/prerm
+          dpkg-deb --root-owner-group --build $P \
+            mono-stereo-gui_${{ env.version }}_amd64.deb
+          shasum -a 256 mono-stereo-gui_${{ env.version }}_amd64.deb \
+                    > mono-stereo-gui_${{ env.version }}_amd64.deb.sha256
+
+      # ---------- Publish ----------
+      - name: Create / update GitHub release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            mono_stereo_gui-linux-x86_64.tar.gz
+            mono_stereo_gui-linux-x86_64.tar.gz.sha256
+            mono-stereo-gui_*_amd64.deb
+            mono-stereo-gui_*_amd64.deb.sha256

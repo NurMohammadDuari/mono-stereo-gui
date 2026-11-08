@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🆘 Having trouble running/using the app?
+    url: https://github.com/NurMohammadDuari/mono-stereo-gui/blob/main/docs/troubleshooting.md
+    about: "Most common problems (pactl missing, no sound after swap, icons) are already solved in the troubleshooting guide — please read it first."
+  - name: 📖 Question about usage?
+    url: https://github.com/NurMohammadDuari/mono-stereo-gui/blob/main/docs/user-guide.md
+    about: How switching works, when mono is useful, what the app changes in your system.
+  - name: 🔒 Security issue?
+    url: https://github.com/NurMohammadDuari/mono-stereo-gui/blob/main/SECURITY.md
+    about: Please do NOT open a public issue — follow the private reporting process in SECURITY.md.
