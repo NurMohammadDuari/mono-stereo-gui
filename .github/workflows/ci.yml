@@ -43,7 +43,7 @@ jobs:
         run: cargo build --release
 
       - name: Upload untested binary artifact (for quick local test)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mono_stereo_gui-${{ runner.os }}-${{ github.sha }}
           path: target/release/mono_stereo_gui
@@ -85,7 +85,7 @@ jobs:
         run: dpkg-deb -I mono-stereo-gui_*_amd64.deb | head -15
 
       - name: Upload .deb artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mono-stereo-gui-deb-${{ github.sha }}
           path: mono-stereo-gui_*_amd64.deb
